@@ -1,0 +1,152 @@
+/* ===== VARIÁVEIS: cores e fontes num lugar só ===== */
+/* Tema claro (padrão) */
+:root {
+  --laranja: #e8501f;         /* cor da marca: topo, início, contato, botões */
+  --laranja-escuro: #b83a10;  /* hover dos botões e rodapé */
+  --sobre-laranja: #ffffff;   /* texto e detalhes em cima do laranja */
+  --creme: #fff6f0;           /* hover dos botões brancos (igual nos dois temas) */
+  --fundo: #ffffff;           /* fundo da página */
+  --papel: #fff6f0;           /* fundo dos cards e da galeria */
+  --texto: #3a2118;           /* texto principal */
+  --destaque: #b83a10;        /* títulos e textos laranja sobre o fundo */
+  --fonte: "Nunito", system-ui, sans-serif;
+  --fonte-logo: "Satisfy", cursive;
+  color-scheme: light;        /* barras de rolagem e controles do vídeo no tema claro */
+}
+
+/* Tema escuro, caso 1: o sistema do cliente está escuro e ele não escolheu "Claro" no botão */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema="claro"]) {
+    --laranja: #c2410c;
+    --laranja-escuro: #8a2c08;
+    --fundo: #1b1311;
+    --papel: #2a1d18;
+    --texto: #f5e9e3;
+    --destaque: #ff9a6e;
+    color-scheme: dark;
+  }
+}
+/* Tema escuro, caso 2: o cliente escolheu "Escuro" no botão (mesmos valores do caso 1) */
+:root[data-tema="escuro"] {
+  --laranja: #c2410c;
+  --laranja-escuro: #8a2c08;
+  --fundo: #1b1311;
+  --papel: #2a1d18;
+  --texto: #f5e9e3;
+  --destaque: #ff9a6e;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; margin: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: 70px; }
+body { font-family: var(--fonte); color: var(--texto); background: var(--fundo); line-height: 1.6; }
+img, video { max-width: 100%; display: block; }
+h1, h2, h3 { line-height: 1.15; }
+:focus-visible { outline: 3px solid var(--texto); outline-offset: 3px; }
+/* Texto escondido na tela, mas lido por leitores de tela */
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ===== BOTÕES ===== */
+.btn {
+  display: inline-block; padding: 12px 22px; border-radius: 999px;
+  background: var(--laranja); color: var(--sobre-laranja); font-weight: 800;
+  text-decoration: none; border: 2px solid var(--laranja); cursor: pointer;
+  transition: transform .15s, background .15s;
+}
+.btn:hover { background: var(--laranja-escuro); border-color: var(--laranja-escuro); transform: translateY(-2px); }
+.btn-claro { background: var(--sobre-laranja); color: var(--laranja-escuro); border-color: var(--sobre-laranja); }
+.btn-claro:hover { background: var(--creme); color: var(--laranja-escuro); border-color: var(--creme); }
+
+/* ===== TOPO ===== */
+.topo {
+  position: sticky; top: 0; z-index: 10; background: var(--laranja);
+  display: flex; align-items: center; gap: 12px 20px;
+  padding: 10px 20px; flex-wrap: wrap;
+}
+.logo { font-family: var(--fonte-logo); font-size: 1.7rem; color: var(--sobre-laranja); text-decoration: none; margin-right: auto; }
+.menu { display: flex; align-items: center; gap: 20px; }
+.menu a:not(.btn) { color: var(--sobre-laranja); font-weight: 700; text-decoration: none; }
+.menu .btn { padding: 8px 18px; }
+.menu-btn { display: none; background: none; border: 0; color: var(--sobre-laranja); font-size: 1.8rem; line-height: 1; cursor: pointer; }
+
+/* ===== BOTÃO DE TEMA (Auto / Claro / Escuro) ===== */
+.tema-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  font: inherit; font-size: .9rem; font-weight: 700;
+  padding: 6px 12px; border-radius: 999px; cursor: pointer;
+  background: transparent; color: var(--sobre-laranja); border: 2px solid var(--sobre-laranja);
+  transition: background .15s;
+}
+.tema-btn:hover { background: rgba(255, 255, 255, .18); }
+.tema-btn svg { display: none; width: 22px; height: 22px; }
+/* o ícone Auto é desenhado só com traço branco; o sol e a lua têm cores próprias */
+.tema-btn .i-auto { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; }
+/* mostra só o ícone do modo atual */
+.tema-btn[data-modo="auto"] .i-auto,
+.tema-btn[data-modo="claro"] .i-claro,
+.tema-btn[data-modo="escuro"] .i-escuro { display: block; }
+
+/* ===== PONTILHADO (marca visual da página) ===== */
+.ponto { border: 3px dashed var(--sobre-laranja); border-radius: 18px; padding: 8px; }
+
+/* ===== INÍCIO ===== */
+.hero {
+  background: var(--laranja); color: var(--sobre-laranja);
+  display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: center;
+  padding: 60px 6vw 70px;
+}
+.hero h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); margin-bottom: 16px; }
+.hero p { font-size: 1.15rem; max-width: 46ch; margin-bottom: 26px; }
+.hero-foto img { border-radius: 12px; width: 100%; max-height: 420px; object-fit: cover; }
+
+/* ===== SEÇÕES ===== */
+.secao { padding: 64px 6vw; }
+.secao h2, .contato h2 { font-size: clamp(1.7rem, 3.5vw, 2.4rem); margin-bottom: 28px; }
+
+/* ===== SERVIÇOS ===== */
+.card { background: var(--papel); border: 3px dashed var(--laranja); border-radius: 18px; padding: 28px; max-width: 900px; }
+.card h3 { font-size: 1.6rem; color: var(--destaque); margin-bottom: 10px; }
+.card p { margin-bottom: 16px; }
+.chips { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.chips li { background: var(--fundo); border: 2px solid var(--laranja); border-radius: 999px; padding: 3px 14px; font-weight: 700; font-size: .95rem; }
+
+/* ===== PORTFÓLIO ===== */
+.filtros { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; }
+.filtros button {
+  font: inherit; font-weight: 700; padding: 8px 18px; border-radius: 999px; cursor: pointer;
+  background: var(--fundo); color: var(--destaque); border: 2px solid var(--laranja);
+}
+.filtros button[aria-pressed="true"] { background: var(--laranja); color: var(--sobre-laranja); }
+.galeria { columns: 3 240px; column-gap: 16px; }
+.item { break-inside: avoid; margin-bottom: 16px; border-radius: 14px; overflow: hidden; background: var(--papel); border: 2px solid var(--papel); }
+.item img, .item video { width: 100%; cursor: zoom-in; transition: transform .25s; }
+.item video { cursor: auto; }
+/* esconde o botão e a barra de volume dos vídeos (Chrome, Edge, Safari e Opera) */
+.item video::-webkit-media-controls-mute-button,
+.item video::-webkit-media-controls-volume-slider,
+.item video::-webkit-media-controls-volume-control-container { display: none !important; }
+.item img:hover { transform: scale(1.03); }
+.item figcaption { padding: 8px 12px; font-weight: 700; font-size: .95rem; }
+
+/* ===== JANELA DE FOTO AMPLIADA ===== */
+dialog { margin: auto; border: 0; border-radius: 14px; padding: 0; max-width: 92vw; max-height: 92vh; background: transparent; overflow: visible; }
+dialog::backdrop { background: rgba(30, 18, 14, .88); }
+dialog img { max-height: 88vh; border-radius: 12px; }
+#fechar { position: absolute; top: -14px; right: -14px; width: 40px; height: 40px; border-radius: 50%; border: 0; background: var(--laranja); color: var(--sobre-laranja); font-size: 1.1rem; cursor: pointer; }
+
+/* ===== CONTATO ===== */
+.contato { background: var(--laranja); color: var(--sobre-laranja); text-align: center; padding: 70px 6vw; }
+.contato p { margin: 0 auto 24px; max-width: 46ch; font-size: 1.1rem; }
+.insta { display: block; margin-top: 22px; color: var(--sobre-laranja); font-weight: 700; }
+.rodape { background: var(--laranja-escuro); color: var(--sobre-laranja); text-align: center; padding: 18px; font-size: .95rem; }
+
+/* ===== CELULAR ===== */
+@media (max-width: 760px) {
+  .menu-btn { display: block; }
+  .menu { display: none; order: 3; width: 100%; flex-direction: column; align-items: flex-start; padding: 12px 0; }
+  .menu.aberto { display: flex; }
+  .hero { grid-template-columns: 1fr; padding: 40px 6vw 50px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; scroll-behavior: auto !important; }
+}
