@@ -1,7 +1,5 @@
-// ===== 1. DADOS DA CLIENTE (para trocar, mude só aqui) =====
-const WHATSAPP = "5569984687088"; // 55 (Brasil) + 69 (DDD) + número
+const WHATSAPP = "5569984687088"; 
 
-// Lista de tipos de bordado que aparece nos "chips" do card de Bordados
 const bordados = ["Brasões", "Jalecos", "Uniformes", "Enxovais", "Velcros", "Camisas", "Bonés", "Capas para livros", "E muito mais!"];
 
 // Portfólio: cada item tem tipo (foto ou video), arquivo, legenda e categoria
@@ -26,7 +24,7 @@ const trabalhos = [
   { tipo: "video", src: "videos/video3.mp4", legenda: "Bordado em ação", cat: "Vídeos" },
 ];
 
-// ===== 2. WHATSAPP: todo link com data-msg abre o WhatsApp com a mensagem pronta =====
+
 document.querySelectorAll("[data-msg]").forEach((link) => {
   const texto = encodeURIComponent(link.dataset.msg); // deixa o texto seguro para a URL
   link.href = `https://wa.me/${WHATSAPP}?text=${texto}`;
@@ -34,7 +32,7 @@ document.querySelectorAll("[data-msg]").forEach((link) => {
   link.rel = "noopener";
 });
 
-// ===== 3. MENU DO CELULAR =====
+// Menu do celular 
 const menuBtn = document.getElementById("menuBtn");
 const menu = document.getElementById("menu");
 function abrirMenu(aberto) {
@@ -48,10 +46,10 @@ menu.addEventListener("click", (e) => {
   if (e.target.tagName === "A") abrirMenu(false); // fecha ao clicar num link
 });
 
-// ===== 4. CHIPS DE BORDADOS =====
+
 document.getElementById("listaBordados").innerHTML = bordados.map((b) => `<li>${b}</li>`).join("");
 
-// ===== 5. PORTFÓLIO: filtros e galeria =====
+// Portfólio: filtros e galeria 
 const galeria = document.getElementById("galeria");
 const filtros = document.getElementById("filtros");
 const categorias = ["Todos", ...new Set(trabalhos.map((t) => t.cat))]; // Set remove repetidos
@@ -76,13 +74,12 @@ filtros.addEventListener("click", (e) => {
 mostrar("Todos");
 
 // Garante que os vídeos fiquem sempre no mudo, mesmo se alguém tentar ligar o som
-// (ex.: tecla "M" ou navegadores que não escondem o botão de volume).
 // O "true" no final faz o aviso chegar aqui, porque esse evento não "sobe" na página sozinho.
 galeria.addEventListener("volumechange", (e) => {
   if (e.target.tagName === "VIDEO" && !e.target.muted) e.target.muted = true;
 }, true);
 
-// ===== 6. AMPLIAR FOTO =====
+// Amplia a foto
 const janela = document.getElementById("janela");
 const fotoGrande = document.getElementById("fotoGrande");
 galeria.addEventListener("click", (e) => {
@@ -95,10 +92,9 @@ galeria.addEventListener("click", (e) => {
 document.getElementById("fechar").addEventListener("click", () => janela.close());
 janela.addEventListener("click", (e) => { if (e.target === janela) janela.close(); }); // clique fora fecha
 
-// ===== 7. ANO DO RODAPÉ =====
 document.getElementById("ano").textContent = new Date().getFullYear();
 
-// ===== 8. TEMA: Auto (segue o sistema) / Claro / Escuro =====
+// Tema: Auto (segue o sistema)
 const raiz = document.documentElement;
 const temaBtn = document.getElementById("temaBtn");
 const temaTexto = document.getElementById("temaTexto");
