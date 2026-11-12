@@ -97,7 +97,7 @@ h1, h2, h3 { line-height: 1.15; }
 }
 .hero h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); margin-bottom: 16px; }
 .hero p { font-size: 1.15rem; max-width: 46ch; margin-bottom: 26px; }
-.hero-foto img { border-radius: 12px; width: 100%; max-height: 420px; object-fit: cover; }
+.hero-foto img { border-radius: 12px; width: 100%; max-height: 360px; object-fit: cover; }
 
 /*  SEÇÕES  */
 .secao { padding: 64px 6vw; }
@@ -117,15 +117,46 @@ h1, h2, h3 { line-height: 1.15; }
   background: var(--fundo); color: var(--destaque); border: 2px solid var(--laranja);
 }
 .filtros button[aria-pressed="true"] { background: var(--laranja); color: var(--sobre-laranja); }
-.galeria { columns: 3 240px; column-gap: 16px; }
-.item { break-inside: avoid; margin-bottom: 16px; border-radius: 14px; overflow: hidden; background: var(--papel); border: 2px solid var(--papel); }
-.item img, .item video { width: 100%; cursor: zoom-in; transition: transform .25s; }
+.galeria { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.item { border-radius: 14px; overflow: hidden; background: var(--papel); border: 2px solid var(--papel); }
+
+/* todas as fotos e vídeos no mesmo formato (3 de largura por 4 de altura), cortando o excesso */
+.item img, .item video { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; cursor: zoom-in; transition: transform .25s; }
 .item video { cursor: auto; }
+
 /* esconde o botão e a barra de volume dos vídeos (Chrome, Edge, Safari e Opera) */
 .item video::-webkit-media-controls-mute-button,
 .item video::-webkit-media-controls-volume-slider,
 .item video::-webkit-media-controls-volume-control-container { display: none !important; }
 .item img:hover { transform: scale(1.03); }
+
+/* Botão grande de play/pause em cima do vídeo */
+.video-box { position: relative; }
+/* cobre o vídeo inteiro, menos os 48px de baixo, onde ficam os controles (tempo, tela cheia) */
+.play-btn {
+  position: absolute; inset: 0 0 48px 0;
+  display: grid; place-items: center;
+  background: none; border: 0; padding: 0; cursor: pointer;
+}
+/* o círculo laranja com o ícone no meio */
+.play-btn .icone {
+  display: grid; place-items: center;
+  width: 64px; height: 64px; border-radius: 50%;
+  background: var(--laranja); border: 3px solid var(--sobre-laranja);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .35);
+  transition: transform .15s, opacity .4s;
+}
+.play-btn svg { width: 28px; height: 28px; fill: var(--sobre-laranja); }
+.play-btn:hover .icone { transform: scale(1.1); }
+/* parado: mostra o play; tocando: mostra o pause */
+.play-btn .i-pause,
+.video-box.tocando .play-btn .i-play { display: none; }
+.video-box.tocando .play-btn .i-pause { display: block; }
+/* tocando: o pause aparece por 1 segundo e some para não tapar o vídeo;
+   volta ao passar o mouse por cima (ou ao navegar com o teclado) */
+.video-box.tocando .play-btn .icone { opacity: 0; transition: transform .15s, opacity .4s 1s; }
+.video-box.tocando:hover .play-btn .icone,
+.play-btn:focus-visible .icone { opacity: 1; transition: transform .15s, opacity .2s; }
 .item figcaption { padding: 8px 12px; font-weight: 700; font-size: .95rem; }
 
 /*  JANELA DE FOTO AMPLIADA  */
@@ -140,12 +171,24 @@ dialog img { max-height: 88vh; border-radius: 12px; }
 .insta { display: block; margin-top: 22px; color: var(--sobre-laranja); font-weight: 700; }
 .rodape { background: var(--laranja-escuro); color: var(--sobre-laranja); text-align: center; padding: 18px; font-size: .95rem; }
 
+/*  TABLET: 3 colunas na galeria  */
+@media (max-width: 1000px) {
+  .galeria { grid-template-columns: repeat(3, 1fr); }
+}
+
 /*  CELULAR  */
 @media (max-width: 760px) {
   .menu-btn { display: block; }
   .menu { display: none; order: 3; width: 100%; flex-direction: column; align-items: flex-start; padding: 12px 0; }
   .menu.aberto { display: flex; }
   .hero { grid-template-columns: 1fr; padding: 40px 6vw 50px; }
+  .hero-foto img { max-height: 240px; }
+  
+  /* galeria em 2 colunas no celular, para as fotos e vídeos não ocuparem a tela toda */
+  .galeria { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .play-btn .icone { width: 50px; height: 50px; }
+  .play-btn svg { width: 22px; height: 22px; }
+  .item figcaption { padding: 6px 8px; font-size: .85rem; line-height: 1.3; }
 }
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; scroll-behavior: auto !important; }

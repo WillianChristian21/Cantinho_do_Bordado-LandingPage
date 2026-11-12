@@ -57,8 +57,17 @@ const categorias = ["Todos", ...new Set(trabalhos.map((t) => t.cat))]; // Set re
 function mostrar(categoria) {
   const lista = categoria === "Todos" ? trabalhos : trabalhos.filter((t) => t.cat === categoria);
   galeria.innerHTML = lista.map((t) => {
+    // Vídeo: fica dentro de uma caixa junto com o botão grande de play/pause por cima
     const midia = t.tipo === "video"
-      ? `<video src="${t.src}" poster="${t.src.replace(".mp4", ".jpg")}" controls muted preload="none" playsinline></video>`
+      ? `<div class="video-box">
+           <video src="${t.src}" poster="${t.src.replace(".mp4", ".jpg")}" controls muted preload="none" playsinline></video>
+           <button class="play-btn" type="button" aria-label="Reproduzir vídeo">
+             <span class="icone" aria-hidden="true">
+               <svg class="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+               <svg class="i-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+             </span>
+           </button>
+         </div>`
       : `<img src="${t.src}" alt="${t.legenda}" loading="lazy">`;
     return `<figure class="item">${midia}<figcaption>${t.legenda}</figcaption></figure>`;
   }).join("");
@@ -73,11 +82,31 @@ filtros.addEventListener("click", (e) => {
 });
 mostrar("Todos");
 
-// Garante que os vídeos fiquem sempre no mudo, mesmo se alguém tentar ligar o som
-// O "true" no final faz o aviso chegar aqui, porque esse evento não "sobe" na página sozinho.
+/* Garante que os vídeos fiquem sempre no mudo, mesmo se alguém tentar ligar o som.
+O "true" no final faz o aviso chegar aqui, porque esse evento não "sobe" na página sozinho.*/
 galeria.addEventListener("volumechange", (e) => {
   if (e.target.tagName === "VIDEO" && !e.target.muted) e.target.muted = true;
 }, true);
+
+// Botão grande do vídeo: clicou na imagem, toca; clicou de novo, pausa
+galeria.addEventListener("click", (e) => {
+  const botao = e.target.closest(".play-btn"); // closest: acha o botão mesmo clicando no ícone dentro dele
+  if (!botao) return;
+  const video = botao.parentElement.querySelector("video");
+  if (video.paused) video.play();
+  else video.pause();
+});
+
+/* Troca o ícone (play = pause) sempre que o vídeo começa ou para,
+seja pelo botão grande ou pelos controles de baixo*/ 
+function atualizarBotao(e) {
+  if (e.target.tagName !== "VIDEO") return;
+  const caixa = e.target.parentElement;
+  const tocando = !e.target.paused;
+  caixa.classList.toggle("tocando", tocando);
+  caixa.querySelector(".play-btn").setAttribute("aria-label", tocando ? "Pausar vídeo" : "Reproduzir vídeo");
+}
+["play", "pause", "ended"].forEach((evento) => galeria.addEventListener(evento, atualizarBotao, true));
 
 // Amplia a foto
 const janela = document.getElementById("janela");
