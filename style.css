@@ -136,9 +136,9 @@ h1, h2, h3 { line-height: 1.15; }
 
 /* Botão grande de play/pause em cima do vídeo */
 .video-box { position: relative; }
-/* cobre o vídeo inteiro, menos os 48px de baixo, onde ficam os controles (tempo, tela cheia) */
+/* cobre o vídeo inteiro, menos os 40px de baixo, onde fica a nossa barra (tempo e tela cheia) */
 .play-btn {
-  position: absolute; inset: 0 0 48px 0;
+  position: absolute; inset: 0 0 40px 0;
   display: grid; place-items: center;
   background: none; border: 0; padding: 0; cursor: pointer;
 }
@@ -161,6 +161,19 @@ h1, h2, h3 { line-height: 1.15; }
 .video-box.tocando .play-btn .icone { opacity: 0; transition: transform .15s, opacity .4s 1s; }
 .video-box.tocando:hover .play-btn .icone,
 .play-btn:focus-visible .icone { opacity: 1; transition: transform .15s, opacity .2s; }
+
+/* Nossa barra de controles, embaixo do vídeo (no lugar dos controles do navegador) */
+.video-barra {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 40px;
+  display: flex; align-items: center; gap: 8px; padding: 0 10px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, .65)); /* sombra suave para os controles aparecerem */
+}
+.progresso { flex: 1; min-width: 0; margin: 0; accent-color: var(--laranja); cursor: pointer; }
+.tela-cheia {
+  display: grid; place-items: center; flex-shrink: 0;
+  width: 30px; height: 30px; padding: 0; border: 0; background: none; cursor: pointer;
+}
+.tela-cheia svg { width: 20px; height: 20px; fill: none; stroke: #fff; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 .item figcaption { padding: 8px 12px; font-weight: 700; font-size: .95rem; }
 
 /*  JANELA DE FOTO AMPLIADA  */

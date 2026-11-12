@@ -60,13 +60,19 @@ function mostrar(categoria) {
     // Vídeo: fica dentro de uma caixa junto com o botão grande de play/pause por cima
     const midia = t.tipo === "video"
       ? `<div class="video-box">
-           <video src="${t.src}" poster="${t.src.replace(".mp4", ".jpg")}" controls muted preload="none" playsinline></video>
+           <video src="${t.src}" poster="${t.src.replace(".mp4", ".jpg")}" muted preload="none" playsinline></video>
            <button class="play-btn" type="button" aria-label="Reproduzir vídeo">
              <span class="icone" aria-hidden="true">
                <svg class="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                <svg class="i-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
              </span>
            </button>
+           <div class="video-barra">
+             <input class="progresso" type="range" min="0" max="100" step="0.1" value="0" aria-label="Posição do vídeo">
+             <button class="tela-cheia" type="button" aria-label="Ver em tela cheia">
+               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></svg>
+             </button>
+           </div>
          </div>`
       : `<img src="${t.src}" alt="${t.legenda}" loading="lazy">`;
     return `<figure class="item">${midia}<figcaption>${t.legenda}</figcaption></figure>`;
@@ -107,6 +113,29 @@ function atualizarBotao(e) {
   caixa.querySelector(".play-btn").setAttribute("aria-label", tocando ? "Pausar vídeo" : "Reproduzir vídeo");
 }
 ["play", "pause", "ended"].forEach((evento) => galeria.addEventListener(evento, atualizarBotao, true));
+
+// Barra de tempo: anda sozinha enquanto o vídeo toca
+galeria.addEventListener("timeupdate", (e) => {
+  const video = e.target;
+  if (video.tagName !== "VIDEO" || !video.duration) return;
+  video.parentElement.querySelector(".progresso").value = (video.currentTime / video.duration) * 100;
+}, true);
+
+// Barra de tempo: arrastar a bolinha pula para aquele ponto do vídeo
+galeria.addEventListener("input", (e) => {
+  if (!e.target.matches(".progresso")) return;
+  const video = e.target.closest(".video-box").querySelector("video");
+  if (video.duration) video.currentTime = (e.target.value / 100) * video.duration;
+});
+
+// Botão de tela cheia
+galeria.addEventListener("click", (e) => {
+  const botao = e.target.closest(".tela-cheia");
+  if (!botao) return;
+  const video = botao.closest(".video-box").querySelector("video");
+  if (video.requestFullscreen) video.requestFullscreen();          // Chrome, Edge, Firefox, Android
+  else if (video.webkitEnterFullscreen) video.webkitEnterFullscreen(); // iPhone (Safari)
+});
 
 // Amplia a foto
 const janela = document.getElementById("janela");
