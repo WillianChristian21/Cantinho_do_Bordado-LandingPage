@@ -128,6 +128,10 @@ h1, h2, h3 { line-height: 1.15; }
 .item video::-webkit-media-controls-mute-button,
 .item video::-webkit-media-controls-volume-slider,
 .item video::-webkit-media-controls-volume-control-container { display: none !important; }
+
+/* esconde o círculo de play que o próprio navegador desenha no meio do vídeo (Chrome e Safari)*/
+.item video::-webkit-media-controls-overlay-play-button,
+.item video::-webkit-media-controls-start-playback-button { display: none !important; }
 .item img:hover { transform: scale(1.03); }
 
 /* Botão grande de play/pause em cima do vídeo */
@@ -183,7 +187,7 @@ dialog img { max-height: 88vh; border-radius: 12px; }
   .menu.aberto { display: flex; }
   .hero { grid-template-columns: 1fr; padding: 40px 6vw 50px; }
   .hero-foto img { max-height: 240px; }
-  
+
   /* galeria em 2 colunas no celular, para as fotos e vídeos não ocuparem a tela toda */
   .galeria { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .play-btn .icone { width: 50px; height: 50px; }
